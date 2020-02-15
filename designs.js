@@ -1,6 +1,8 @@
-var co = document.getElementById('colorPicker');
-var rows = document.getElementById("inputHeight");
-var cell = document.getElementById("inputWidth");
+let co = document.getElementById('colorPicker');
+let rows = document.getElementById("inputHeight");
+let cell = document.getElementById("inputWidth");
+let boardRowsArray = []
+let boardArray = []
 document.querySelector("#submit").addEventListener("click", makeGrid)
 
 function findMines(array){
@@ -36,7 +38,7 @@ function findMines(array){
           for (let d = j-1; d <=j+1; d++) {
               if(d<0||d===array[0].length) continue
               sum +=array[s][d]
-              //the sum of thos 8 elemnt will present the number of nighbours mins
+              //the sum of those 8 elemnt will present the number of nighbours mins
           }
       }
       return sum
@@ -93,4 +95,10 @@ function makeGrid(event) {
     }
   }
 
+  //make an array for the cells of board
+  boardRowsArray = document.querySelectorAll("table tr")
+  boardArray = []
+  for (let index = 0; index < boardRowsArray.length; index++) {    
+      boardArray.push(boardRowsArray[index].querySelectorAll("td"))
+  } 
 }
