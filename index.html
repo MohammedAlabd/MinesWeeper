@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mines Weeper!</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monoton">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Lab: Mines Weeper The Game</h1>
+    <h5 id="number-of-mines"></h5>
+    <h2>Choose Grid Size</h2>
+    <form id="sizePicker" target="blank" novalidate  >
+        Grid Height:
+        <input type="number" id="inputHeight" name="height" min="1" value="1"> Grid Width:
+        <input type="number" id="inputWidth" name="width" min="1" value="1">
+        <input type="submit" id="submit" value="Submit" >
+    </form>
+
+    <!-- <h2>Pick A Color</h2> -->
+    <!-- <input type="color" id="colorPicker"> -->
+
+    <h2>Strat Playing</h2>
+    <table id="pixelCanvas"></table>
+
+    <script src="designs.js"></script>
+</body>
+
+</html>
