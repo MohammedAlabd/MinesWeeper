@@ -1,7 +1,6 @@
 let co = document.getElementById('colorPicker');
 let rows = document.getElementById("inputHeight");
 let cell = document.getElementById("inputWidth");
-let boardRowsArray = []
 let boardArray = []
 document.querySelector("#submit").addEventListener("click", makeGrid)
 
@@ -49,7 +48,7 @@ function findMines(array){
       for (let index = 0; index < rows; index++) {
           let row = []
           for (let index2 = 0; index2 <coloums; index2++) {
-              row.push(Math.round(Math.random()-0.35))
+              row.push(Math.round(Math.random()-0.4))
           }
           array.push(row)
       }
@@ -60,23 +59,10 @@ function findMines(array){
 function numberOfMines(array){
   let minesSum = 0
   array.forEach(row => row.forEach(ele => minesSum += ele ))
-  // console.log(minesSum);
   document.querySelector("#number-of-mines").innerHTML = `The number of Mines is ${minesSum}`
   
 }
 
-function openIt(event) {
-  if(event.target.className === "9"){
-    event.target.style.backgroundColor = 'red';
-    alert("gameover")
-  }else if(event.target.className === "0"){
-    event.target.style.backgroundColor = 'green';
-
-  }else{
-    event.target.innerHTML = event.target.className
-  }
-  
-}
 
 function makeGrid(event) {
   array = buildRandomArray(rows.value,cell.value)
@@ -92,13 +78,59 @@ function makeGrid(event) {
       colum.appendChild(row);
       row.className = array[i][j]
       row.addEventListener('click', openIt);
+      row.setAttribute("x",i)
+      row.setAttribute("y",j)
     }
   }
 
   //make an array for the cells of board
-  boardRowsArray = document.querySelectorAll("table tr")
+  let boardRowsArray = document.querySelectorAll("table tr")
   boardArray = []
-  for (let index = 0; index < boardRowsArray.length; index++) {    
-      boardArray.push(boardRowsArray[index].querySelectorAll("td"))
+  for (let index = 0; index < boardRowsArray.length; index++) { 
+    let array = boardRowsArray[index].querySelectorAll("td")
+    boardArray.push(array)
   } 
+}
+
+function openIt(event) {
+  let target = event.target
+  let i =parseInt(target.attributes.x.value)
+  let j =parseInt(target.attributes.y.value)
+  console.log(target,i,j)
+  if(target.className === "9"){
+    target.style.backgroundColor = 'red';
+    alert("gameover")
+  }else if(target.className === "0"){
+    target.style.backgroundColor = 'green';
+    openNighbours(i,j)
+  }else{
+    target.innerHTML = target.className
+  }
+  
+}
+
+
+function openNighbours(i,j){
+  debugger
+  let nibArrays = [boardArray[i][j]]
+  for (let index = 0; index < nibArrays.length; index++) {
+    let target = nibArrays[index];
+    let i =parseInt(target.attributes.x.value)
+    let j =parseInt(target.attributes.y.value)
+  
+    for (let s = i-1; s <= i+1; s++) {
+      if(s<0||s===boardArray.length) continue
+      
+      for (let d = j-1; d <=j+1; d++) {
+        if(d<0||d===boardArray[0].length||(s===i&&d===j)) continue
+        if(boardArray[s][d].className === "0"){
+          boardArray[s][d].style.backgroundColor = 'green'
+          boardArray[s][d].className = ""
+          nibArrays.push(boardArray[s][d])
+        }else{
+          boardArray[s][d].innerHTML = boardArray[s][d].className
+        }
+      }
+    }
+  }
 }
