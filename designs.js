@@ -2,6 +2,8 @@ let co = document.getElementById('colorPicker');
 let rows = document.getElementById("inputHeight");
 let cell = document.getElementById("inputWidth");
 let boardArray = []
+let numberOfOpendCells = 0
+let numberOfNonMines = 0
 document.querySelector("#submit").addEventListener("click", makeGrid)
 
 function findMines(array){
@@ -44,30 +46,30 @@ function findMines(array){
   }
    //build an random array
   function buildRandomArray(rows,coloums){
+      let minesSum = 0
       let array = []
       for (let index = 0; index < rows; index++) {
           let row = []
           for (let index2 = 0; index2 <coloums; index2++) {
-              row.push(Math.round(Math.random()-0.4))
+              let isMine = Math.round(Math.random()-0.4)
+              row.push(isMine)
+              if (isMine === 1) ++ minesSum
           }
           array.push(row)
       }
-      numberOfMines(array)
+      numberOfNonMines = (rows*coloums) - minesSum
+      document.querySelector("#number-of-mines").innerHTML = `The number of Mines is ${minesSum}`
+      document.querySelector("#number-of-nonMines").innerHTML = `The number of Non-Mines cells is ${numberOfNonMines}`    
       return array
   }
   
-function numberOfMines(array){
-  let minesSum = 0
-  array.forEach(row => row.forEach(ele => minesSum += ele ))
-  document.querySelector("#number-of-mines").innerHTML = `The number of Mines is ${minesSum}`
-  
-}
 
 
 function makeGrid(event) {
   array = buildRandomArray(rows.value,cell.value)
   array = findMines(array)
   event.preventDefault()
+  numberOfOpendCells = 0
   const table = document.querySelector("#pixelCanvas");
   table.innerHTML = ""
   for (let i = 0; i < rows.value; i++) {
@@ -80,6 +82,7 @@ function makeGrid(event) {
       row.addEventListener('click', openIt);
       row.setAttribute("x",i)
       row.setAttribute("y",j)
+      row.setAttribute("opend","0")
     }
   }
 
@@ -96,22 +99,27 @@ function openIt(event) {
   let target = event.target
   let i =parseInt(target.attributes.x.value)
   let j =parseInt(target.attributes.y.value)
-  console.log(target,i,j)
+  // isMine(target)
   if(target.className === "9"){
     target.style.backgroundColor = 'red';
+    openAll()
     alert("gameover")
-  }else if(target.className === "0"){
+  }else if(target.className === "0" && target.attributes.opend.value === "0"){
+    ifNotOpenThenCount(target)
     target.style.backgroundColor = 'green';
     openNighbours(i,j)
+
   }else{
-    target.innerHTML = target.className
+    if(target.attributes.opend.value === "0"){
+      ifNotOpenThenCount(target)
+      target.innerHTML = target.className
+    }
   }
-  
+  if (numberOfOpendCells === numberOfNonMines) alert("you win")
 }
 
 
 function openNighbours(i,j){
-  debugger
   let nibArrays = [boardArray[i][j]]
   for (let index = 0; index < nibArrays.length; index++) {
     let target = nibArrays[index];
@@ -123,14 +131,47 @@ function openNighbours(i,j){
       
       for (let d = j-1; d <=j+1; d++) {
         if(d<0||d===boardArray[0].length||(s===i&&d===j)) continue
-        if(boardArray[s][d].className === "0"){
-          boardArray[s][d].style.backgroundColor = 'green'
-          boardArray[s][d].className = ""
+        if(boardArray[s][d].className === "0" && boardArray[s][d].attributes.opend.value === "0" ){
           nibArrays.push(boardArray[s][d])
-        }else{
+          boardArray[s][d].style.backgroundColor = 'green'
+          ifNotOpenThenCount(boardArray[s][d])
+          
+        }else if(boardArray[s][d].attributes.opend.value === "0" && boardArray[s][d].className != "0" ){
           boardArray[s][d].innerHTML = boardArray[s][d].className
+          ifNotOpenThenCount(boardArray[s][d])
         }
       }
     }
   }
+  if (numberOfOpendCells === numberOfNonMines) alert("you win")
 }
+
+function ifNotOpenThenCount(target){
+  if (target.attributes.opend.value === "0"){
+    target.attributes.opend.value = "1"
+    numberOfOpendCells++
+  }
+}
+
+function openAll(){
+  boardArray.forEach(row => row.forEach(cell => cell.innerHTML = cell.className))
+}
+
+// function isMine(target){
+  // if(target.className === "9"){
+    // target.style.backgroundColor = 'red';
+    // openAll()
+    // alert("gameover")
+  // }else if(target.className === "0" && target.attributes.opend.value === "0"){
+    // ifNotOpenThenCount(target)
+    // target.style.backgroundColor = 'green';
+    // openNighbours(i,j)
+    // if (numberOfOpendCells === numberOfNonMines) alert("you win")
+  // }else{
+    // if(target.attributes.opend.value === "0"){
+      // ifNotOpenThenCount(target)
+      // target.innerHTML = target.className
+      // if (numberOfOpendCells === numberOfNonMines) alert("you win")
+    // }
+  // }
+// }
