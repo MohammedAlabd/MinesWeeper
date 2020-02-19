@@ -1,7 +1,7 @@
-let co = document.getElementById('colorPicker');
 let rows = document.getElementById("inputHeight");
 let cell = document.getElementById("inputWidth");
 let boardArray = []
+let minsMapArray = []
 let numberOfOpendCells = 0
 let numberOfNonMines = 0
 let flagsNumber = 0
@@ -9,8 +9,8 @@ document.querySelector("#submit").addEventListener("click", makeGrid)
 
 function makeGrid(event) {
   event.preventDefault()
-  array = buildRandomArray(rows.value,cell.value)
-  array = findMines(array)
+  minsMapArray = buildRandomArray(rows.value,cell.value)
+  minsMapArray = findMines(minsMapArray)
   numberOfOpendCells = 0
   const table = document.querySelector("#pixelCanvas");
   table.innerHTML = ""
@@ -20,13 +20,13 @@ function makeGrid(event) {
     for (let j = 0; j < cell.value; j++) {
       const row = document.createElement('td');
       colum.appendChild(row);
-      row.className = array[i][j]
       row.addEventListener('click', clickEvent);
       row.addEventListener('contextmenu', event => event.preventDefault());
       row.addEventListener('contextmenu', flagIt);
       row.setAttribute("x",i)
       row.setAttribute("y",j)
-      row.setAttribute("opend","0")
+      row.setAttribute("isOpen","0")
+      row.setAttribute("isFlaged","0")
     }
   }
   //make an array for the cells of board
@@ -38,7 +38,6 @@ function makeGrid(event) {
   } 
 }
 
- //build an random array
 function buildRandomArray(rows,coloums){
 let minesSum = 0
 let array = []
@@ -47,7 +46,7 @@ for (let index = 0; index < rows; index++) {
     for (let index2 = 0; index2 <coloums; index2++) {
         let isMine = Math.round(Math.random()-0.4)
         row.push(isMine)
-        if (isMine === 1) ++ minesSum
+        if (isMine === 1) ++minesSum
     }
     array.push(row)
 }
@@ -70,10 +69,8 @@ function findMines(array){
           //if its not mine go count the number of nighburs and return thes nubmer and we will do that by calling a new function
           else{return checkNighbours(i,j,array)}
       })
-      //push that new row into my resultArray and start from again for a new row "new array elemnt"
       resuatArray.push(rowArray)
   })
-  //yeahhhhhh we did it ;)
   return resuatArray
   }
   
@@ -101,18 +98,18 @@ function clickEvent(event) {
   let target = event.target
   let i =parseInt(target.attributes.x.value)
   let j =parseInt(target.attributes.y.value)
-  if(target.className === "9"){
+  if(minsMapArray[i][j] === 9){
     target.style.backgroundColor = 'red';
     GameOver()
     alert("gameover")
-  }else if(target.className === "0" && target.attributes.opend.value === "0"){
-    opendCellsCounter(target)
+  }else if(minsMapArray[i][j] === 0 && target.attributes.isOpen.value === "0"){
+    openedCellsCounter(target)
     openIt(target,true)
     openNighbours(i,j)
 
   }else{
-    if(target.attributes.opend.value === "0"){
-      opendCellsCounter(target)
+    if(target.attributes.isOpen.value === "0"){
+      openedCellsCounter(target)
       openIt(target)
     }
   }
@@ -120,18 +117,20 @@ function clickEvent(event) {
 }
 
 function openIt(target,IsZero = false){
+  let i =parseInt(target.attributes.x.value)
+  let j =parseInt(target.attributes.y.value)
   if(IsZero){
     target.innerHTML = ""
     target.style.backgroundColor = 'green';
   }else{
-    target.innerHTML = target.className
+    target.innerHTML = minsMapArray[i][j]
   }
   removeEventListeners(target)
 }
 
-function opendCellsCounter(target){
-  if (target.attributes.opend.value === "0"){
-    target.attributes.opend.value = "1"
+function openedCellsCounter(target){
+  if (target.attributes.isOpen.value === "0"){
+    target.attributes.isOpen.value = "1"
     numberOfOpendCells++
   }
 }
@@ -149,14 +148,17 @@ function openNighbours(i,j){
       for (let d = j-1; d <=j+1; d++) {
         let target = boardArray[s][d]
         if(d<0||d===boardArray[0].length||(s===i&&d===j)) continue
-        if(target.className === "0" && target.attributes.opend.value === "0" ){
-          nibArrays.push(target)
-          openIt(target,true)
-          opendCellsCounter(target)
-          
-        }else if(target.attributes.opend.value === "0" && target.className != "0" ){
-          openIt(target)
-          opendCellsCounter(target)
+        if(target.attributes.isOpen.value === "0"){
+          // debugger
+          if(minsMapArray[s][d] < 1){
+            nibArrays.push(target)
+            openIt(target,true)
+            openedCellsCounter(target)
+            
+          }else{
+            openIt(target)
+            openedCellsCounter(target)
+          }
         }
       }
     }
@@ -166,7 +168,10 @@ function openNighbours(i,j){
 
 function GameOver(){
   boardArray.forEach(row => row.forEach(cell => {
-    cell.innerHTML = cell.className
+    let i =parseInt(cell.attributes.x.value)
+    let j =parseInt(cell.attributes.y.value)
+    cell.innerHTML = minsMapArray[i][j]
+    if (cell.attributes.isFlaged.value === "1") cell.style.backgroundColor = "orange"
     removeEventListeners(cell)
   }))
 }
@@ -175,15 +180,18 @@ function flagIt(event){
   let target = event.target
   if(target.innerHTML === "flag"){
     target.parentNode.addEventListener("click",clickEvent)
+    target.parentNode.attributes.isFlaged.value = "0"
     target.parentNode.removeChild(target)
     flagsCounter(-1)
   }else if(target.innerHTML){
     target.removeChild(target.querySelector(".material-icons"))
     target.addEventListener("click",clickEvent)
+    target.attributes.isFlaged.value = "0"
     flagsCounter(-1)
   }else{
     event.target.innerHTML = `<i class="material-icons">flag</i>`
     target.removeEventListener("click",clickEvent)
+    target.attributes.isFlaged.value = "1"
     flagsCounter(+1)
   }
 }
@@ -203,7 +211,7 @@ function flagsCounter(int){
 
 //TODO List
 // 1- Add a flag when sombody clicks the right click button.--------- done -------------
-// 2- remove the className
+// 2- remove the className----- done -----------
 
 
 // I want to ask for 
