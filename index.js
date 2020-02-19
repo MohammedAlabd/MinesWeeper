@@ -4,7 +4,58 @@ let cell = document.getElementById("inputWidth");
 let boardArray = []
 let numberOfOpendCells = 0
 let numberOfNonMines = 0
+let flagsNumber = 0
 document.querySelector("#submit").addEventListener("click", makeGrid)
+
+function makeGrid(event) {
+  event.preventDefault()
+  array = buildRandomArray(rows.value,cell.value)
+  array = findMines(array)
+  numberOfOpendCells = 0
+  const table = document.querySelector("#pixelCanvas");
+  table.innerHTML = ""
+  for (let i = 0; i < rows.value; i++) {
+    const colum = document.createElement('tr');
+    table.appendChild(colum);
+    for (let j = 0; j < cell.value; j++) {
+      const row = document.createElement('td');
+      colum.appendChild(row);
+      row.className = array[i][j]
+      row.addEventListener('click', clickEvent);
+      row.addEventListener('contextmenu', event => event.preventDefault());
+      row.addEventListener('contextmenu', flagIt);
+      row.setAttribute("x",i)
+      row.setAttribute("y",j)
+      row.setAttribute("opend","0")
+    }
+  }
+  //make an array for the cells of board
+  let boardRowsArray = document.querySelectorAll("table tr")
+  boardArray = []
+  for (let index = 0; index < boardRowsArray.length; index++) { 
+    let array = boardRowsArray[index].querySelectorAll("td")
+    boardArray.push(array)
+  } 
+}
+
+ //build an random array
+function buildRandomArray(rows,coloums){
+let minesSum = 0
+let array = []
+for (let index = 0; index < rows; index++) {
+    let row = []
+    for (let index2 = 0; index2 <coloums; index2++) {
+        let isMine = Math.round(Math.random()-0.4)
+        row.push(isMine)
+        if (isMine === 1) ++ minesSum
+    }
+    array.push(row)
+}
+numberOfNonMines = (rows*coloums) - minesSum
+document.querySelector("#number-of-mines").innerHTML = `The number of Mines is ${minesSum}`
+document.querySelector("#number-of-nonMines").innerHTML = `The number of Non-Mines cells is ${numberOfNonMines}`    
+return array
+}
 
 function findMines(array){
   //defining a new array for the result and other one for the row that we are working on
@@ -44,80 +95,46 @@ function findMines(array){
       }
       return sum
   }
-   //build an random array
-  function buildRandomArray(rows,coloums){
-      let minesSum = 0
-      let array = []
-      for (let index = 0; index < rows; index++) {
-          let row = []
-          for (let index2 = 0; index2 <coloums; index2++) {
-              let isMine = Math.round(Math.random()-0.4)
-              row.push(isMine)
-              if (isMine === 1) ++ minesSum
-          }
-          array.push(row)
-      }
-      numberOfNonMines = (rows*coloums) - minesSum
-      document.querySelector("#number-of-mines").innerHTML = `The number of Mines is ${minesSum}`
-      document.querySelector("#number-of-nonMines").innerHTML = `The number of Non-Mines cells is ${numberOfNonMines}`    
-      return array
-  }
   
 
-
-function makeGrid(event) {
-  array = buildRandomArray(rows.value,cell.value)
-  array = findMines(array)
-  event.preventDefault()
-  numberOfOpendCells = 0
-  const table = document.querySelector("#pixelCanvas");
-  table.innerHTML = ""
-  for (let i = 0; i < rows.value; i++) {
-    const colum = document.createElement('tr');
-    table.appendChild(colum);
-    for (let j = 0; j < cell.value; j++) {
-      const row = document.createElement('td');
-      colum.appendChild(row);
-      row.className = array[i][j]
-      row.addEventListener('click', openIt);
-      row.setAttribute("x",i)
-      row.setAttribute("y",j)
-      row.setAttribute("opend","0")
-    }
-  }
-
-  //make an array for the cells of board
-  let boardRowsArray = document.querySelectorAll("table tr")
-  boardArray = []
-  for (let index = 0; index < boardRowsArray.length; index++) { 
-    let array = boardRowsArray[index].querySelectorAll("td")
-    boardArray.push(array)
-  } 
-}
-
-function openIt(event) {
+function clickEvent(event) {
   let target = event.target
   let i =parseInt(target.attributes.x.value)
   let j =parseInt(target.attributes.y.value)
-  // isMine(target)
   if(target.className === "9"){
     target.style.backgroundColor = 'red';
-    openAll()
+    GameOver()
     alert("gameover")
   }else if(target.className === "0" && target.attributes.opend.value === "0"){
-    ifNotOpenThenCount(target)
-    target.style.backgroundColor = 'green';
+    opendCellsCounter(target)
+    openIt(target,true)
     openNighbours(i,j)
 
   }else{
     if(target.attributes.opend.value === "0"){
-      ifNotOpenThenCount(target)
-      target.innerHTML = target.className
+      opendCellsCounter(target)
+      openIt(target)
     }
   }
   if (numberOfOpendCells === numberOfNonMines) alert("you win")
 }
 
+function openIt(target,IsZero = false){
+  if(IsZero){
+    target.innerHTML = ""
+    target.style.backgroundColor = 'green';
+  }else{
+    target.innerHTML = target.className
+  }
+  removeEventListeners(target)
+}
+
+function opendCellsCounter(target){
+  if (target.attributes.opend.value === "0"){
+    target.attributes.opend.value = "1"
+    numberOfOpendCells++
+  }
+}
 
 function openNighbours(i,j){
   let nibArrays = [boardArray[i][j]]
@@ -130,15 +147,16 @@ function openNighbours(i,j){
       if(s<0||s===boardArray.length) continue
       
       for (let d = j-1; d <=j+1; d++) {
+        let target = boardArray[s][d]
         if(d<0||d===boardArray[0].length||(s===i&&d===j)) continue
-        if(boardArray[s][d].className === "0" && boardArray[s][d].attributes.opend.value === "0" ){
-          nibArrays.push(boardArray[s][d])
-          boardArray[s][d].style.backgroundColor = 'green'
-          ifNotOpenThenCount(boardArray[s][d])
+        if(target.className === "0" && target.attributes.opend.value === "0" ){
+          nibArrays.push(target)
+          openIt(target,true)
+          opendCellsCounter(target)
           
-        }else if(boardArray[s][d].attributes.opend.value === "0" && boardArray[s][d].className != "0" ){
-          boardArray[s][d].innerHTML = boardArray[s][d].className
-          ifNotOpenThenCount(boardArray[s][d])
+        }else if(target.attributes.opend.value === "0" && target.className != "0" ){
+          openIt(target)
+          opendCellsCounter(target)
         }
       }
     }
@@ -146,32 +164,48 @@ function openNighbours(i,j){
   if (numberOfOpendCells === numberOfNonMines) alert("you win")
 }
 
-function ifNotOpenThenCount(target){
-  if (target.attributes.opend.value === "0"){
-    target.attributes.opend.value = "1"
-    numberOfOpendCells++
+function GameOver(){
+  boardArray.forEach(row => row.forEach(cell => {
+    cell.innerHTML = cell.className
+    removeEventListeners(cell)
+  }))
+}
+
+function flagIt(event){
+  let target = event.target
+  if(target.innerHTML === "flag"){
+    target.parentNode.addEventListener("click",clickEvent)
+    target.parentNode.removeChild(target)
+    flagsCounter(-1)
+  }else if(target.innerHTML){
+    target.removeChild(target.querySelector(".material-icons"))
+    target.addEventListener("click",clickEvent)
+    flagsCounter(-1)
+  }else{
+    event.target.innerHTML = `<i class="material-icons">flag</i>`
+    target.removeEventListener("click",clickEvent)
+    flagsCounter(+1)
   }
 }
 
-function openAll(){
-  boardArray.forEach(row => row.forEach(cell => cell.innerHTML = cell.className))
+function removeEventListeners(target){
+  target.removeEventListener("click",clickEvent)
+  target.removeEventListener("contextmenu",flagIt)
 }
 
-// function isMine(target){
-  // if(target.className === "9"){
-    // target.style.backgroundColor = 'red';
-    // openAll()
-    // alert("gameover")
-  // }else if(target.className === "0" && target.attributes.opend.value === "0"){
-    // ifNotOpenThenCount(target)
-    // target.style.backgroundColor = 'green';
-    // openNighbours(i,j)
-    // if (numberOfOpendCells === numberOfNonMines) alert("you win")
-  // }else{
-    // if(target.attributes.opend.value === "0"){
-      // ifNotOpenThenCount(target)
-      // target.innerHTML = target.className
-      // if (numberOfOpendCells === numberOfNonMines) alert("you win")
-    // }
-  // }
-// }
+
+
+function flagsCounter(int){
+  flagsNumber += int
+  document.querySelector("#number-of-flags").innerHTML = `The NUmber of Flags is ${flagsNumber}`
+}
+
+
+//TODO List
+// 1- Add a flag when sombody clicks the right click button.--------- done -------------
+// 2- remove the className
+
+
+// I want to ask for 
+// 1- is it better to make the open it function checking if its comming from openNighbours or not?
+// 2- 
