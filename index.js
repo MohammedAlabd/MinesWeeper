@@ -17,6 +17,7 @@ function makeGame(event) {
 }
 
 function makeGrid(rows, columns) {
+
   const table = document.querySelector("#pixelCanvas");
   table.innerHTML = "";
   for (let i = 0; i < rows; i++) {
@@ -68,7 +69,7 @@ function findMines(initializeMinesMapArray) {
           isFlagged: false
         };
       } else {
-        const content = findTheSurroundingMines(i, j, array);
+        const content = findTheSurroundingMines(i, j, initializeMinesMapArray);
         return {
           content: content,
           isOpen: false,
