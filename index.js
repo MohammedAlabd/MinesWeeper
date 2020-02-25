@@ -25,6 +25,7 @@ function makeGrid(rows, columns) {
     table.appendChild(column);
     for (let j = 0; j < columns; j++) {
       const node = document.createElement("td");
+      // node.className = "z-depth-1"
       column.appendChild(node);
       minesMapArray[i][j].node = node;
       addEventListeners(node, i, j);
@@ -37,13 +38,20 @@ function createMinesMapArray(rows, columns) {
   return findMines(initializeMinesMapArray);
 }
 
+// function setDifficulty(){
+
+// }
+
 function buildRandomArray(rows, columns) {
   let minesSum = 0;
+  let difficulty =parseFloat(document.querySelector('#difficulty').value)
+  console.log(difficulty);
+  
   let initializeMinesMapArray = [];
   for (let i = 0; i < rows; i++) {
     let row = [];
     for (let j = 0; j < columns; j++) {
-      let isMine = Math.round(Math.random() - 0.4);
+      let isMine = Math.round(Math.random() - difficulty);
       row.push(isMine);
       if (isMine) ++minesSum;
     }
@@ -232,6 +240,3 @@ function renderFlagInElement(element) {
 // 6- rename all target, node, cell to "targetNode".  -------- done -------
 // 7- remove the left-click event listener from flagIt function.   -------- done -----
 // 8- add some designing like shadows and border radios.
-
-// I want to ask for
-// 1-

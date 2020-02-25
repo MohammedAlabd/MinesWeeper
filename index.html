@@ -7,31 +7,67 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <link rel="stylesheet" href="./css/bootstrap.css">
     <!-- Compiled and minified CSS -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
-
-    <!-- Compiled and minified JavaScript -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
             
 </head>
 
 <body>
-    <h1>Lab: Mines Weeper The Game</h1>
-    <p id="number-of-mines"></p>
-    <p id="number-of-nonMines"></p>
-    <p id="number-of-flags"></p>
+    <h1 class="text-center mt-5">Lab: Mines Weeper The Game</h1>
+    <div class="row justify-content-center">
+        <div class="col-sm-12">
+            <p id="number-of-nonMines" class="text-center"></p>
+        </div>
+        <div class="col-sm-auto">
+            <p id="number-of-mines" class="text-center"></p>
+        </div>
+        <div class="col-sm-auto">
+            <p id="number-of-flags" class="text-center"></p>
+        </div>
+    </div>
 
-    <h2>Choose Grid Size</h2>
-    <form id="sizePicker" target="blank" novalidate  >
-        Grid Height:
-        <input type="number" id="inputHeight" name="height" min="1" max="50" value="1"> Grid Width:
-        <input type="number" id="inputWidth" name="width" min="1" max="50" value="1">
-        <input type="submit" id="submit" value="Submit" >
-    </form>
-    <h2>Strat Playing</h2>
-    <table id="pixelCanvas"></table>
+    <h2 class="text-center">Choose Grid Size</h2>
+    <div class="container">
+        <form id="sizePicker" target="blank" novalidate  >
+            <div class="row justify-content-center">
+                <div class="col-sm-auto align-self-center">
+                    <!-- Grid Height -->
+                    <input type="number" id="inputHeight" class="validate" name="height" min="1" max="50">
+                    <label for="inputHeight">Grid Height</label>
+                </div>
+                <div class="col-sm-auto align-self-center">
+                    <input type="number" id="inputWidth" name="width" min="1" max="50">
+                    <label for="inputWidth">Grid Width</label>
+                </div>
+            </div>
+            <div class="row text-center justify-content-center">
+                <div class="col-sm-6">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <input type="submit"class="btn btn-outline-primary" id="submit" value="Start" >
+                            <!-- <button class="btn btn-outline-secondary" type="button">Button</button> -->
+                        </div>
+                        <select class="custom-select" id="difficulty" aria-label="Example select with button addon">
+                          <option selected>Choose The Difficulty...</option>
+                          <option value="0.4">Easy</option>
+                          <option value="0.35">Regular</option>
+                          <option value="0.3">Hard</option>
+                          <option value="0.25">Insane</option>
+
+                        </select>
+                      </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <h2 class="text-center">Strat Playing</h2>
+    <div class="container text-center">
+        <table class="table-hover table-warning" id="pixelCanvas"></table>
+    </div>
 
     <script src="index.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
+    <script src="./js/bootstrap.js"></script>
 </body>
-
 </html>

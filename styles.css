@@ -17,8 +17,8 @@ h2:first-of-type {
 }
 
 table,
-tr,
-td {
+#pixelCanvas tr,
+#pixelCanvas td {
   border: 1px solid black;
 }
 
@@ -27,12 +27,16 @@ table {
   margin: 0 auto;
 }
 
-tr {
+#pixelCanvas tr {
   height: 35px;
+  padding: 0;
+  margin: 0;
 }
 
-td {
+#pixelCanvas td {
   width: 35px;
+  padding: 0;
+  margin: 0;
 }
 
 input[type="number"] {
@@ -42,4 +46,9 @@ input[type="number"] {
 .material-icons{
   font-size: 1rem;
   color: brown;
+}
+
+.table-hover  td:hover {
+  color: #212529;
+  background-color: rgba(0, 0, 0, 0.075);
 }
