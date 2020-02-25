@@ -33,11 +33,11 @@
             <div class="row justify-content-center">
                 <div class="col-sm-auto align-self-center">
                     <!-- Grid Height -->
-                    <input type="number" id="inputHeight" class="validate" name="height" min="1" max="50">
+                    <input type="number" id="inputHeight" class="validate" name="height" min="1" max="50" value="1">
                     <label for="inputHeight">Grid Height</label>
                 </div>
                 <div class="col-sm-auto align-self-center">
-                    <input type="number" id="inputWidth" name="width" min="1" max="50">
+                    <input type="number" id="inputWidth" name="width" min="1" max="50" value="1">
                     <label for="inputWidth">Grid Width</label>
                 </div>
             </div>
@@ -46,10 +46,9 @@
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <input type="submit"class="btn btn-outline-primary" id="submit" value="Start" >
-                            <!-- <button class="btn btn-outline-secondary" type="button">Button</button> -->
                         </div>
-                        <select class="custom-select" id="difficulty" aria-label="Example select with button addon">
-                          <option selected>Choose The Difficulty...</option>
+                        <select class="custom-select" id="difficulty" aria-label="Example select with button addon" required>
+                          <option selected disabled value='null'>Choose The Difficulty...</option>
                           <option value="0.4">Easy</option>
                           <option value="0.35">Regular</option>
                           <option value="0.3">Hard</option>
@@ -67,7 +66,7 @@
     </div>
 
     <script src="index.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="./js/bootstrap.js"></script>
 </body>
 </html>

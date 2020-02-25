@@ -38,16 +38,17 @@ function createMinesMapArray(rows, columns) {
   return findMines(initializeMinesMapArray);
 }
 
-// function setDifficulty(){
-
-// }
+function difficultyValidation(){
+  if(document.querySelector('#difficulty').value === "null") return false
+  return true 
+}
 
 function buildRandomArray(rows, columns) {
   let minesSum = 0;
-  let difficulty =parseFloat(document.querySelector('#difficulty').value)
-  console.log(difficulty);
-  
   let initializeMinesMapArray = [];
+  let difficulty =parseFloat(document.querySelector('#difficulty').value)
+  isDifficultyValid = difficultyValidation(difficulty)
+  if(!isDifficultyValid) return alert("Please Choose a Difficulty")
   for (let i = 0; i < rows; i++) {
     let row = [];
     for (let j = 0; j < columns; j++) {
