@@ -4,11 +4,18 @@ let numberOfNonMines = 0;
 let flagsNumber = 0;
 document.querySelector("#submit").addEventListener("click", makeGame);
 
+function isNumbersValid(rows,columns){
+  if (rows > 50 || columns > 50 )
+    return false
+
+  return true
+}
+
 function makeGame(event) {
   event.preventDefault();
   const rows = document.getElementById("inputHeight").value;
   const columns = document.getElementById("inputWidth").value;
-  if (rows > 50 || columns > 50)
+  if (!isNumbersValid(rows,columns))
     return alert("its too much, pleas chose numbers below 50");
   renderFlagsNumber(0);
   numberOfOpenedCells = 0;
