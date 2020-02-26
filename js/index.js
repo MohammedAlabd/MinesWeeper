@@ -71,8 +71,8 @@ function buildRandomArray(rows, columns) {
 }
 
 function renderTheNumbersOfMines(minesSum) {
-  document.querySelector("#number-of-mines").innerHTML = `The number of Mines is ${minesSum}`;
-  document.querySelector("#number-of-nonMines").innerHTML = `The number of Non-Mines cells is ${numberOfNonMines}`;
+  document.querySelector("#number-of-mines").innerHTML = `The Number of Mines is ${minesSum}`;
+  document.querySelector("#number-of-nonMines").innerHTML = `The Number of Non-Mines cells is ${numberOfNonMines}`;
 }
 
 function findMines(initializeMinesMapArray) {
@@ -165,7 +165,7 @@ function renderFlagsNumber(number) {
   else flagsNumber += number;
   document.querySelector(
     "#number-of-flags"
-  ).innerHTML = `The NUmber of Flags is ${flagsNumber}`;
+  ).innerHTML = `The Number of Flags is ${flagsNumber}`;
 }
 
 function openIt(i, j, targetNode, isZero = false) {
@@ -238,4 +238,3 @@ function renderFlagInElement(element) {
   element.innerHTML = `<i class="material-icons">flag</i>`;
   element.style.backgroundColor = '#FDE74C'
 }
-

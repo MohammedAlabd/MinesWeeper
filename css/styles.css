@@ -1,11 +1,20 @@
 body {
   text-align: center;
+  background: url("../img/background.jpg") no-repeat;
+  background-size: cover;
+}
+
+.wrapper{
+  /* background-color: #fff; */
+  padding: 10px; 
+  margin-top: 15px; 
 }
 
 h1 {
   font-family: Monoton;
   font-size: 70px;
   margin: 0.2em;
+  color: whitesmoke;
 }
 
 h2 {
@@ -16,10 +25,14 @@ h2:first-of-type {
   margin-top: 0.5em;
 }
 
+.label-width{
+  width: 90px;
+}
+
 table,
 #pixelCanvas tr,
 #pixelCanvas td {
-  border: 1px solid black;
+  border: 1px solid rgb(26, 24, 24);
 }
 
 table {
