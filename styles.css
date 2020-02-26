@@ -45,10 +45,15 @@ input[type="number"] {
 
 .material-icons{
   font-size: 1rem;
-  color: brown;
+  color: #FF1654;
 }
 
 .table-hover  td:hover {
   color: #212529;
   background-color: rgba(0, 0, 0, 0.075);
 }
+.table-my-color{
+  background-color:#247BA0
+  ;
+}
+

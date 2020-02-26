@@ -151,10 +151,7 @@ function flagIt(i, j) {
     const isFlagged = minesMapArray[i][j].isFlagged;
     if (!isFlagged) {
       renderFlagInElement(targetNode);
-      targetNode.removeEventListener(
-        "click",
-        minesMapArray[i][j].leftClickListener
-      );
+      targetNode.removeEventListener("click",minesMapArray[i][j].leftClickListener);
       minesMapArray[i][j].isFlagged = true;
       renderFlagsNumber(+1);
     } else {
@@ -175,9 +172,9 @@ function openIt(i, j, targetNode, isZero = false) {
   minesMapArray[i][j].isOpen = true;
   numberOfOpenedCells++;
   if (isZero) {
-    renderCell(targetNode, "", "green");
+    renderCell(targetNode, "", "#B6D473");
   } else {
-    renderCell(targetNode, minesMapArray[i][j].content);
+    renderCell(targetNode, minesMapArray[i][j].content,"#FBFFED");
   }
   removeEventListeners(targetNode, i, j);
 }
@@ -194,10 +191,8 @@ function loopOverNeighbors(rowIndex, columnIndex, array, callback) {
   }
 }
 
-function renderCell(targetNode, content, backgroundColor = null) {
-  if (backgroundColor) {
-    targetNode.style.backgroundColor = backgroundColor;
-  }
+function renderCell(targetNode, content, backgroundColor) {
+  targetNode.style.backgroundColor = backgroundColor;
   targetNode.innerHTML = content;
 }
 
@@ -223,6 +218,9 @@ function openAll() {
       const isFlagged = targetElementObject.isFlagged;
       if (isFlagged) targetElementObject.node.style.backgroundColor = "orange";
       removeEventListeners(targetElementObject.node, i, j);
+      const isOpen = targetElementObject.isOpen
+      if(!isOpen)
+        targetElementObject.node.style.backgroundColor = '#FF1654'
     })
   );
 }
@@ -232,19 +230,12 @@ function removeFlag(i, j) {
   targetNode.addEventListener("click", minesMapArray[i][j].leftClickListener);
   minesMapArray[i][j].isFlagged = false;
   targetNode.removeChild(targetNode.querySelector(".material-icons"));
+  targetNode.style.backgroundColor = '#247BA0'
   renderFlagsNumber(-1);
 }
 
 function renderFlagInElement(element) {
   element.innerHTML = `<i class="material-icons">flag</i>`;
+  element.style.backgroundColor = '#FDE74C'
 }
 
-//TODO List
-// 1- Add a flag when somebody clicks the right click button. --------- done -------------
-// 2- remove the className. ----- done -----------
-// 3- remove the date attributes. ------done------
-// 4- fix the removeEventListeners function. ------------ done ------------
-// 5- add function to render the numbers of mines,non-mines. --------done-------
-// 6- rename all target, node, cell to "targetNode".  -------- done -------
-// 7- remove the left-click event listener from flagIt function.   -------- done -----
-// 8- add some designing like shadows and border radios.
