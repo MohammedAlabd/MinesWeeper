@@ -5,3 +5,5 @@ the features is :
 1- auto generation grid that you can choose you grid width and height.
 2- 4 difficulties to choose from.
 3- right click will add a flag.
+
+to run the game please visit [this link](https://minesweeper-purejs.netlify.app/)
